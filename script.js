@@ -9,14 +9,29 @@ grid.randomEmptyCell().tile = new Tile(gameBoard);
 setupInput();
 
 function setupInput() {
-  window.addEventListener("keydown", handleInput, { once: true });
-  window.addEventListener("swiped", handleInput, { once: true });
+  window.addEventListener("keydown", handleKeyBoard, { once: true });
+  window.addEventListener("click", handleClick);
 }
 
-async function handleInput(e) {
-  var key = e.detail.dir ? e.detail.dir : e.key.replace("Arrow", "");
+function handleClick(e) {
+  let x = e.x - window.innerWidth / 2;
+  let y = e.y - window.innerHeight / 2;
 
-  switch (key.toLowerCase()) {
+  var key;
+  if (x + y >= 0) {
+    key = x - y >= 0 ? "right" : "down";
+  } else {
+    key = x - y >= 0 ? "up" : "left";
+  }
+  handleInput(key);
+}
+
+function handleKeyBoard(e) {
+  handleInput(e.key.replace("Arrow", "").toLowerCase());
+}
+
+async function handleInput(key) {
+  switch (key) {
     case "up":
       if (!canMoveUp()) {
         setupInput();
